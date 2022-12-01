@@ -10,14 +10,14 @@ class User{
 }
 //Info of Ingredient
 class Ingredient{
-	//menu package¿¡¼­ °¡Á®¿À±â
+	//menu packageì—ì„œ ê°€ì ¸ì˜¤ê¸°
 }
 class Menu{
-	//menu package¿¡¼­ °¡Á®¿À±â
+	//menu packageì—ì„œ ê°€ì ¸ì˜¤ê¸°
 }
 //customer extends user class
 class Customer extends User{
-	private boolean isActivity = true; //Á¦Á¦´ë»óÀÚ°¡ ¾Æ´ÑÁö È®ÀÎ
+	private boolean isActivity = true; //ì œì œëŒ€ìƒìê°€ ì•„ë‹Œì§€ í™•ì¸
 	
 	public void setIsActivity(boolean isActivity) {
 		this.isActivity = isActivity;
@@ -25,36 +25,36 @@ class Customer extends User{
 	public boolean getIsActivity() {
 		return this.isActivity;
 	}
-	//ÃÖ´ë µî·Ï Àç·á Á¤ÀÇ?
-	//¿ä¸®ÇÏ°Ô µÈ´Ù¸é ¿ä¸®ÀÇ ingredient¸¸Å­ ³» ¸®½ºÆ®¿¡¼­ »èÁ¦ÇØ¾ßÇÔ
-	//±×°Í Á¦¿ÜÇÏ°íµµ »ç¿ëÀÚ°¡ »èÁ¦ÇÒ ¼ö ÀÖ¾î¾ßÇÔ
+	//ìµœëŒ€ ë“±ë¡ ì¬ë£Œ ì •ì˜?
+	//ìš”ë¦¬í•˜ê²Œ ëœë‹¤ë©´ ìš”ë¦¬ì˜ ingredientë§Œí¼ ë‚´ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì‚­ì œí•´ì•¼í•¨
+	//ê·¸ê²ƒ ì œì™¸í•˜ê³ ë„ ì‚¬ìš©ìê°€ ì‚­ì œí•  ìˆ˜ ìˆì–´ì•¼í•¨
 	ArrayList<Ingredient> owned = new ArrayList<Ingredient> ();
 	ArrayList<Menu> eatenMenu = new ArrayList<Menu> ();
 	public void addOwnIngredient(Ingredient i){
-		//UI¿¡¼­ ¼±ÅÃµÈ Àç·á i¸¦ ³» ¸®½ºÆ®¿¡ Ãß°¡ÇØ¾ßÇÔ
+		//UIì—ì„œ ì„ íƒëœ ì¬ë£Œ ië¥¼ ë‚´ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€í•´ì•¼í•¨
 		owned.add(i);
 	}
 	public void deleteOwnIngredient(Ingredient d) {
 		owned.remove(d);
 	}
 	public void addEatenMenu(Menu m) {
-		//¸®½ºÆ®¿¡ Ãß±â
+		//ë¦¬ìŠ¤íŠ¸ì— ì¶”ê¸°
 		eatenMenu.add(m);
-		//¸Ş´ºÀÇ ¿µ¾ç¼Ò(menu package) °¡Á®¿Í¼­ ³» ¿µ¾ç¼Ò ¾÷µ¥ÀÌÆ®(nutrient package)
+		//ë©”ë‰´ì˜ ì˜ì–‘ì†Œ(menu package) ê°€ì ¸ì™€ì„œ ë‚´ ì˜ì–‘ì†Œ ì—…ë°ì´íŠ¸(nutrient package)
 	}
 }
 
-//°ü¸®ÀÚ class
+//ê´€ë¦¬ì class
 class Administer extends User{
-	//ºÎÀûÀıÇÑ ¸Ş´º »èÁ¦
+	//ë¶€ì ì ˆí•œ ë©”ë‰´ ì‚­ì œ
 	 ArrayList<Menu> mainmenu = new ArrayList<Menu>();
-	//°ü¸®ÀÚ°¡ UI¿¡¼­ ¼±ÅÃÇÑ ¸Ş´º¸¦ »èÁ¦
+	//ê´€ë¦¬ìê°€ UIì—ì„œ ì„ íƒí•œ ë©”ë‰´ë¥¼ ì‚­ì œ
 	public void DeleteMenu(Menu m) {
-		//Ä«Å×°í¸®´Â ¸Ş´ºÆĞÅ°Áö¿¡¼­ ¿©±â¼­´Â ´ë°­ ±¸Çö¸¸
+		//ì¹´í…Œê³ ë¦¬ëŠ” ë©”ë‰´íŒ¨í‚¤ì§€ì—ì„œ ì—¬ê¸°ì„œëŠ” ëŒ€ê°• êµ¬í˜„ë§Œ
 		mainmenu.remove(m);
 	}
 	public void suspendUser(Customer c) {
-		//¾Ç¼º À¯Àú Â÷´Ü
+		//ì•…ì„± ìœ ì € ì°¨ë‹¨
 		c.setIsActivity(false);
 	}
 }
