@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.first.PD.Menu.Ingredient;
+import com.example.first.PD.Menu.IngredientList;
 import com.example.first.PD.Menu.Menu;
+import com.example.first.PD.Menu.MenuList;
 
 import java.util.ArrayList;
 
@@ -15,10 +17,9 @@ public class Menu_Control {
     SQLiteDatabase sqLiteDatabase;
     public Menu_Control(Menu_DaM menu_dam){ this.menu_dam = menu_dam;}
 
-    public void Insert(Menu menu, Ingredient[] ingredientslist)
+    private void inserting(Menu menu, Ingredient[] ingredientslist, SQLiteDatabase sqLiteDatabase, Menu_DaM menu_daM, ContentValues contentValues, ContentValues ingredient_values, String Menu_Type)
     {
-        sqLiteDatabase = menu_dam.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+
         //contentValues.put(menu_dam.MENU_ID,1);
 
         contentValues.put(menu_dam.MENU_NAME,menu.getName());
@@ -42,16 +43,16 @@ public class Menu_Control {
             contentValues.put(menu_dam.MENU_INGREDIENT,ingredientslist[i].getName());
             contentValues.put(menu_dam.MENU_INGREDIENT_COUNT,ingredientslist[i].getCount());
             //foreign key를 받는 menu_ingredient -> ingredient table의 primarykey = ingredient_name
-            sqLiteDatabase.insert(menu_dam.TABLE_MENU,null,contentValues);
+            sqLiteDatabase.insert(Menu_Type,null,contentValues);
         }
     }
 
-    public ArrayList<Menu> select_menu()
+    private ArrayList<Menu> selecting(SQLiteDatabase sqLiteDatabase, Menu_DaM menu_daM, String Menu_type)
     {
-        sqLiteDatabase = menu_dam.getReadableDatabase();
-        String query_menu = "SELECT * FROM TABLE_MENU JOIN TABLE_INGREDIENT"+
-                " ON TABLE_MENU.MENU_INGREDIENT = TABLE_INGREDIENT.INGREDIENT_NAME"+
-                " AND TABLE_MENU.MENU_INGREDIENT_COUNT = TABLE_INGREDIENT.COUNT";
+
+        String query_menu = "SELECT * FROM "+ Menu_type+" JOIN TABLE_INGREDIENT"+
+                " ON "+Menu_type+".MENU_INGREDIENT = TABLE_INGREDIENT.INGREDIENT_NAME"+
+                " AND "+Menu_type+".MENU_INGREDIENT_COUNT = TABLE_INGREDIENT.COUNT";
         //INGREDIENT
         Cursor c_menu = sqLiteDatabase.rawQuery(query_menu,null );
         //SELECT * FROM TABLE_MENU
@@ -109,10 +110,56 @@ public class Menu_Control {
                 menulist.set(menulist.size()-1,lastmenu);*/
 
             }
+
         }
         return menulist;
+    }
+    public void insert_MAIN(Menu menu, Ingredient[] ingredientslist)
+    {
+        sqLiteDatabase = menu_dam.getWritableDatabase();
+        ContentValues contentValues= new ContentValues();
+        ContentValues ingredient_Values = new ContentValues();
+        inserting(menu,ingredientslist,sqLiteDatabase,menu_dam,contentValues,ingredient_Values,menu_dam.TABLE_MAINMENU);
+    }
+
+
+    public void insert_SIDE(Menu menu, Ingredient[] ingredientslist)
+    {
+        sqLiteDatabase = menu_dam.getWritableDatabase();
+        ContentValues contentValues= new ContentValues();
+        ContentValues ingredient_Values = new ContentValues();
+        inserting(menu,ingredientslist,sqLiteDatabase,menu_dam,contentValues,ingredient_Values,menu_dam.TABLE_SIDEMENU);
+    }
+    public void insert_SOUP(Menu menu, Ingredient[] ingredientslist)
+    {
+        sqLiteDatabase = menu_dam.getWritableDatabase();
+        ContentValues contentValues= new ContentValues();
+        ContentValues ingredient_Values = new ContentValues();
+        inserting(menu,ingredientslist,sqLiteDatabase,menu_dam,contentValues,ingredient_Values,menu_dam.TABLE_SOUPMENU);
+    }
+
+    public ArrayList<Menu> getdb_MAIN()
+    {
+        sqLiteDatabase = menu_dam.getReadableDatabase();
+        String menu_type = menu_dam.TABLE_MAINMENU;
+        return selecting(sqLiteDatabase,menu_dam,menu_type);
 
     }
+    public ArrayList<Menu> getdb_SIDE()
+    {
+        sqLiteDatabase = menu_dam.getReadableDatabase();
+        String menu_type = menu_dam.TABLE_SIDEMENU;
+        return selecting(sqLiteDatabase,menu_dam,menu_type);
+
+    }
+    public ArrayList<Menu> getdb_SOUP()
+    {
+        sqLiteDatabase = menu_dam.getReadableDatabase();
+        String menu_type = menu_dam.TABLE_SOUPMENU;
+        return selecting(sqLiteDatabase,menu_dam,menu_type);
+
+    }
+
 
     public void db_close()
     {

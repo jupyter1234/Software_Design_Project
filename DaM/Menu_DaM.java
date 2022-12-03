@@ -7,6 +7,9 @@ public class Menu_DaM extends android.database.sqlite.SQLiteOpenHelper{
 
     public String[] MENU_COLS = {"MENU_ID", "MENU_NAME","MENU_VIEWS","MENU_CONTENTS", "MENU_INGREDIENT_RATIO"};
     public String TABLE_MENU = "TABLE_MENU";
+    public String TABLE_MAINMENU = "TABLE_MAINMENU";
+    public String TABLE_SIDEMENU= "TABLE_SIDEMENU";
+    public String TABLE_SOUPMENU="TABLE_SOUPMENU";
     public String MENU_ID=MENU_COLS[0];
     public String MENU_NAME=MENU_COLS[1];
     public String MENU_VIEWS=MENU_COLS[2];
@@ -54,6 +57,46 @@ public class Menu_DaM extends android.database.sqlite.SQLiteOpenHelper{
 
         sqLiteDatabase.execSQL(create_menu);
 
+        String create_mainmenu="CREATE TABLE IF NOT EXISTS "+TABLE_MAINMENU+
+                " ("+
+                MENU_NAME+" NOT NULL, "+
+                MENU_VIEWS+" NOT NULL, "+
+                MENU_CONTENTS+" NOT NULL, "+
+                MENU_INGREDIENT_RATIO+" DOUBLE NOT NULL, "+
+                MENU_INGREDIENT+" NOT NULL, "+
+                MENU_INGREDIENT_COUNT+" INT NOT NULL, "+
+                "FOREIGN KEY (MENU_INGREDIENT) REFERENCES TABLE_INGREDIENT(INGREDIENT_NAME),"+
+                "FOREIGN KEY(MENU_INGREDIENT_COUNT) REFERENCES TABLE_INGREDIENT(COUNT) );";
+
+        sqLiteDatabase.execSQL(create_mainmenu);
+
+        String create_sidemenu="CREATE TABLE IF NOT EXISTS "+TABLE_SIDEMENU+
+                " ("+
+                MENU_NAME+" NOT NULL, "+
+                MENU_VIEWS+" NOT NULL, "+
+                MENU_CONTENTS+" NOT NULL, "+
+                MENU_INGREDIENT_RATIO+" DOUBLE NOT NULL, "+
+                MENU_INGREDIENT+" NOT NULL, "+
+                MENU_INGREDIENT_COUNT+" INT NOT NULL, "+
+                "FOREIGN KEY (MENU_INGREDIENT) REFERENCES TABLE_INGREDIENT(INGREDIENT_NAME),"+
+                "FOREIGN KEY(MENU_INGREDIENT_COUNT) REFERENCES TABLE_INGREDIENT(COUNT) );";
+        sqLiteDatabase.execSQL(create_sidemenu);
+
+        String create_soupmenu="CREATE TABLE IF NOT EXISTS "+TABLE_SOUPMENU+
+                " ("+
+                MENU_NAME+" NOT NULL, "+
+                MENU_VIEWS+" NOT NULL, "+
+                MENU_CONTENTS+" NOT NULL, "+
+                MENU_INGREDIENT_RATIO+" DOUBLE NOT NULL, "+
+                MENU_INGREDIENT+" NOT NULL, "+
+                MENU_INGREDIENT_COUNT+" INT NOT NULL, "+
+                "FOREIGN KEY (MENU_INGREDIENT) REFERENCES TABLE_INGREDIENT(INGREDIENT_NAME),"+
+                "FOREIGN KEY(MENU_INGREDIENT_COUNT) REFERENCES TABLE_INGREDIENT(COUNT) );";
+
+
+
+        sqLiteDatabase.execSQL(create_soupmenu);
+
 
     }
 
@@ -61,6 +104,12 @@ public class Menu_DaM extends android.database.sqlite.SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         String drop_query="drop table "+TABLE_MENU+";";
         sqLiteDatabase.execSQL(drop_query);
+        String drop_query1="drop table "+TABLE_SOUPMENU+";";
+        sqLiteDatabase.execSQL(drop_query1);
+        String drop_query2="drop table "+TABLE_MAINMENU+";";
+        sqLiteDatabase.execSQL(drop_query2);
+        String drop_query3="drop table "+TABLE_SIDEMENU+";";
+        sqLiteDatabase.execSQL(drop_query3);
 
         onCreate(sqLiteDatabase);
     }
