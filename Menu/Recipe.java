@@ -1,49 +1,52 @@
-import java.io.File;
+import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 public class Recipe {
-    private String contents;
-    // 사진은 좀 더 생각
-    private ArrayList<File> pictures;
-    private ArrayList<Ingredient> neededIngredient = new ArrayList<Ingredient>();
+    private ArrayList<String> contents = new ArrayList<String>();
+    private ArrayList<Bitmap> pictures = new ArrayList<Bitmap>();
+    private ArrayList<Ingredient> neededIngredients = new ArrayList<Ingredient>();
     private double ingredientRatio;
+    private int ownedIntredientCnt = 0;
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void addContents(String str) {
+        this.contents.add(str);
     }
 
-    public String getContents() {
+    public ArrayList<String> getContents() {
         return contents;
     }
 
-    public void addNeededIngredient(Ingredient ingredient) {
-        this.neededIngredient.add(ingredient);
+    public void addNeededIngredients(Ingredient ingredient) {
+        this.neededIngredients.add(ingredient);
     }
 
-    public ArrayList<Ingredient> getNeededIngredient() {
-        return neededIngredient;
+    public ArrayList<Ingredient> getNeededIngredients() {
+        return neededIngredients;
     }
 
     public void setIngredientRatio(ArrayList<Ingredient> ownedIngredients) {
-        double count = 0;
-        for(Ingredient e:neededIngredient) {
-            if(ownedIngredients.contains(e)){
-                count += 1;
+        for(int i=0;i<neededIngredients.size();i++) {
+            for(int j=0;j<ownedIngredients.size();j++){
+                if(neededIngredients.get(i).getName().equals(ownedIngredients.get(j).getName()))
+                    ownedIntredientCnt++;
             }
         }
-        this.ingredientRatio = count/this.neededIngredient.size();
+        this.ingredientRatio = ownedIntredientCnt/this.neededIngredients.size();
     }
 
     public double getIngredientRatio() {
         return ingredientRatio;
     }
 
-    // 사진은 좀 더 생각
-    public ArrayList<File> getPictures() {
-        return pictures;
+    public int getOwnedIntredientCnt() {
+        return ownedIntredientCnt;
     }
 
-    public void addPhoto() {
+    public void addPhoto(Bitmap b) {
+        this.pictures.add(b);
+    }
 
+    public ArrayList<Bitmap> getPictures() {
+        return pictures;
     }
 }
