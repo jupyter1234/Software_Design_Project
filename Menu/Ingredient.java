@@ -1,54 +1,61 @@
-public class Ingredient {
-    private String name;
-    private int carbohydrate;
-    private int protein;
-    private int fat;
-    private int sodium;
-    private int sugars;
-    private int count;
-    private String purchaseLink;
+import java.io.Serializable;
 
-    Ingredient(String name, int carb, int protein, int fat, int sodium, int sugars, int count, String link) {
+public class Ingredient implements Serializable {
+    private String name;
+    private double carbohydrate;
+    private double protein;
+    private double fat;
+    private double sodium;
+    private double sugars;
+    private double amount;
+    private String unit;
+    private String purchaseLink = "https://www.coupang.com/np/search?q=";
+
+    Ingredient(String name, double carb, double protein, double fat, double sodium, double sugars, double amount, String unit) {
         this.name = name;
         this.carbohydrate = carb;
         this.protein = protein;
         this.fat = fat;
         this.sodium = sodium;
         this.sugars = sugars;
-        this.count = count;
-        this.purchaseLink = link;
+        this.amount = amount;
+        this.unit = unit;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getCarbohydrate() {
+    public double getCarbohydrate() {
         return carbohydrate;
     }
 
-    public int getProtein() {
+    public double getProtein() {
         return protein;
     }
 
-    public int getFat() {
+    public double getFat() {
         return fat;
     }
 
-    public int getSodium() {
+    public double getSodium() {
         return sodium;
     }
 
-    public int getSugars() {
+    public double getSugars() {
         return sugars;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public double getAmount() {
+        return amount;
     }
 
-    public int getCount() {
-        return count;
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 
     public String getPurchaseLink() {
