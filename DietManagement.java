@@ -1,6 +1,16 @@
 package Nutrient;
+import Menu.*;
+
 import java.util.*;
-public class DietManagement {
+
+
+public class DietManagement
+{
+    public int Pro = 18;// 단백질 한끼 기준량 // 하루엔 55g
+    public int Car = 33; // 탄수화물 한끼 권장량 // 하루엔 100g
+    public int Sod = 1; // 나트륨 한끼 권장량 // g
+    public int Sug = 8; // 설탕 한끼 권장량 // 하루에 24g
+    public int Fa = 17;// 지방 한끼 권장량 // 하루에 51g
     private int totalProtein;
     private int totalCarbohydrate;
     private int totalFat;
@@ -8,52 +18,316 @@ public class DietManagement {
     private int totalSodium;
     private String contents;
 
-// 회원가입할 때 자신의 신체 내용을 입력하는 칸도 있어야할 듯
-// 또 자신의 직업을 선택박스에서 선택하고 그 칸에 따라 활동량이 25인지 30인지 40인지 고정시키면 될 것같음
-// 어떤 방식으로 계산을 해야하지?
-// 막 1숟갈 2숟갈 이런식으로 하면 영양성분이 오락가락할텐데 어떻게 비교하지?
-// 요리를 하면 영양성분은 다 사용자가 직접 추가해야하나?
-// 요리백과의 경우 피드백은 없고 재료에 100g당 열량이 몇 kcal로만 적혀 있더라~
+    public void caculateNutritionFacts(Menu m) {
+        this.totalCarbohydrate = 0;
+        this.totalFat = 0;
+        this.totalProtein = 0;
+        this.totalSodium = 0;
+        this.totalSugars = 0;
+        ArrayList<Ingredient> li = m.getRecipe().getNeededIngredient();
+        for (int i = 0; i < li.size(); i++) {
 
-
-
-    // 하루 권장 칼로리 섭취량 = 표준 체중 x 활동량
-    // 표준 체중은 (자신의 키 - 100) x 0.9)
-    // 활동량은 적은 경우 25, 규칙적인 생활을 하는 경우 30~35, 육체노동 등 활동량이 많은 경우 40인데 20~30대에 해당하는 자취생의 경우 활동량을 30로 고정 시켜 계산하는 게 맞다고 봄
-    // ex) 21세인 나의 키가 171일 때 하루 권장 칼로리는 = ((171-100)x0.9) x 30 = 1917이고 이를 세끼로 나누면, 한 끼 섭취량은 639kcal이다
-
-    // 음식 칼로리 표 : https://m.blog.naver.com/min02299/221177656019
-    // 영양성분표 : http://www.samsunghospital.com/home/healthInfo/content/contenView.do?CONT_SRC_ID=31453&CONT_SRC=HOMEPAGE&CONT_ID=4664&CONT_CLS_CD=001021002001
-    // ??
-    protected void caculateNutritionFacts(ArrayList<String> eatenMenuList)
-    {
-        String input;
-        Scanner scanner = new Scanner(System.in);
-
-        input = scanner.next();
-        eatenMenuList.add(input);
-
-        System.out.println(eatenMenuList.get(0));
-        //for( int i = 0; i < eatenMenuList.size(); i++){}
-
-    }
-    public static void main(String[] args)
-    {
-        ArrayList<String> eatenMenuList = new ArrayList<>();
-        String input;
-        Scanner scanner = new Scanner(System.in);
-        int i = 0;
-
-        while(i < 5) {
-
-            input = scanner.next();
-            eatenMenuList.add(input);
-            i++;
-        }
-        for(i = 0; i < eatenMenuList.size(); i++)
-        {
-            System.out.println(eatenMenuList.get(i));
-        }
-
+            this.totalSugars += li.get(i).getSugars();
+            this.totalSodium += li.get(i).getSodium();
+            this.totalProtein += li.get(i).getProtein();
+            this.totalCarbohydrate += li.get(i).getCarbohydrate();
+            this.totalFat += li.get(i).getFat();
     }
 }
+    public void setContents() {
+        if (gettotalCarbohydrate() < Car) {
+            if (gettotalFat() < Fa) {
+                if (gettotalProtein() < Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod) {
+                            this.contents = "탄수화물, 지방, 단백질, 당류, 나트륨 (모든 영양소)을 기준량에 비해 덜 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod) {
+                            this.contents = "탄수화물, 지방, 단백질, 당류를 기준량에 비해 덜 섭취하고 나트륨을 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod) {
+                            this.contents = "탄수화물, 지방, 단백질, 당류를 기준량에 비해 덜 섭취하셨고 나트륨은 기준량 알맞게 섭취하였네요!";
+
+                        }
+                    } else if (gettotalSugars() > Sug) {
+                        if (gettotalSodium() < Sod) {
+                            this.contents = "탄수화물, 지방, 단백질, 나트륨을 기준량에 비해 덜 섭취하고, 당류를 기준량에 비해 더 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod) {
+                            this.contents = "탄수화물, 지방, 단백질을 기준량에 비해 덜 섭취하고, 당류와 나트륨을 기준량에 비해 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod) {
+                            this.contents = "탄수화물, 지방, 단백질을 기준량에 비해 덜 섭취하고, 당류를 기준량보다 더 섭취했고 나트륨은 알맞게 드셨네요!";
+                        }
+
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 지방, 단백질, 나트륨을 비해 덜 섭취하고, 당류는 알맞게 먹음";
+                        } else if (gettotalSodium() > Sod) {
+                            this.contents = "탄수화물, 지방, 단백질, 나트륨을 기준량에 비해 덜 섭취하고, 당류는 알맞게 먹음";
+                        } else if (gettotalSodium() == Sod) {
+                            this.contents = "탄수화물, 지방, 단백질을 기준량에 비해 덜 섭취하고, 당류와 나트륨은 알맞게 먹음";
+                        }
+                    }
+                } else if (gettotalProtein() > Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 지방, 당류, 나트륨을 기준량에 비해 덜 섭취하고, 단백질을 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod) {
+                            this.contents = "탄수화물, 지방, 당류를 기준량에 비해 덜 섭취하고, 단백질과 나트륨을 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod) {
+                            this.contents = "탄수화물, 지방, 당류를 기준량에 비해 덜 섭취하였고, 단백질을 기준량보다 더 섭취하였으며, 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() > Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 지방, 나트륨을 기준량에 비해 덜 섭취하고, 단백질과 당류를 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 지방을 기준량에 비해 덜 섭취하고, 단백질, 당류, 나트륨을 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 지방을 기준량에 비해 덜 섭취하고, 단백질,당류를 기준량 보다 더 섭취하였으며, 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 지방, 나트륨을 기준량에 비해 덜 섭취하고, 단백질을 기준량보다 더 섭취했으며 , 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물과 지방을 기준량에 비해 덜 섭취하고, 단백질과 나트륨을 기준량보다 더 섭취했으며, 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물고 지방을 기준량에 비해 덜 섭취하고, 단백질을 기준량보다 더 섭취했으며, 당류와 나트륨을 알맞게 섭취하셨네요!";
+                        }
+                    }
+                } else if (gettotalProtein() == Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 지방, 나트륨을 기준량에 비해 덜 섭취하고, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 지방, 당류를 기준량에 비해 덜 섭취하고, 나트륨을 기준량보다 더 섭취하였으며, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 지방, 당류를 기준량에 비해 덜 섭취하고, 단백질과 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() > Sug) {
+
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 지방, 나트륨을 기준량에 비해 덜 섭취하고, 당류를 기준량보다 더 섭취하였으며, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod) {
+                            this.contents = "탄수화물, 지방을 기준량에 비해 덜 섭취하고, 당류와 나트륨을 기준량보다 더 섭취하였으며, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 지방을 기준량에 비해 덜 섭취하고, 당류를 기준량보다 더 섭취하였으며, 단백질과 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 지방, 나트륨을 기준량에 비해 덜 섭취하고, 단백질과 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물과 지방을 기준량에 비해 덜 섭취하고, 나트륨을 기준량보다 더 섭취했으며, 단백질과 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물과 지방을 기준량에 비해 덜 섭취하고, 단백질, 당류, 나트륨을 알맞게 섭취하셨네요!";
+                        }
+                    }
+                }
+            } else if (gettotalFat() > Fa) {
+                if (gettotalProtein() < Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 단백질, 당류, 나트륨을 기준량에 비해 덜 섭취하고, 지방을 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 단백질, 당류를 기준량에 비해 덜 섭취하고, 지방, 나트륨을 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 단백질, 당류를 기준량에 비해 덜 섭취하셨고, 지방을 기준량보다 더 섭취하였으며, 나트륨은 알맞게 드셨네요!";
+
+                        }
+
+                    } else if (gettotalSugars() > Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents =  "탄수화물, 단백질, 나트륨을 기준량에 비해 덜 섭취하고, 지방과 당류는 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents =  "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 지방, 당류, 나트륨은 기준량보다 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents =  "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 지방과 당류는 기준량보다 더 섭취하였으며, 나트륨은 알맞게 드셨네요!";
+                        }
+
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 단백질, 나트륨은 기준량에 비해 덜 섭취하고, 지방은 기준량보다 더 많이 섭취하였으며, 당류는 알맞게 드셨습니다.";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 나트륨과 지방은 기준량보다 더 많이 섭취하였으며,  당류는 알맞게 드셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 지방은 기준량보다 더 많이 섭취하였으며, 당류와 나트륨을 알맞게 드셨네요!";
+                        }
+                    }
+                } else if (gettotalProtein() > Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents =  "탄수화물, 당류, 나트륨을 기준량에 비해 덜 섭취하고, 지방과 단백질을 더 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents =  "탄수화물과 당류를 기준량에 비해 덜 섭취하고, 지방, 단백질, 나트륨을 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents =  "탄수화물과 당류를 기준량에 비해 덜 섭취하고, 지방과 단백질을 기준량 보다 더 섭취하였으며 나트륨은 알맞게 드셨네요!";
+                        }
+                    } else if (gettotalSugars() > Sug) {
+
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물과 나트륨을 기준량에 비해 덜 섭취하고, 지방, 단백질, 당류를 더 섭취하였습니다.";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 지방, 나트륨, 단백질, 당류를 더 섭취하였습니다.";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 지방, 단백질, 당류를 기준량보다 더 섭취하였으며 나트륨은 알맞게 드셨네요!";
+                        }
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 단백질을 기준량보다 덜 섭취하였고, 지방을 기준량보다 더 섭취하였으며, 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물이 기준량에 비해 덜 섭취하고, 지방, 단백질, 나트륨을 기준량보다 더 섭취했으며, 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물이 기준량에 비해 덜 섭취하고, 지방과 단백질을 기준량보다 더 섭취했으며 당류와 나트륨을 알맞게 섭취하셨네요!";
+                        }
+                    }
+                } else if (gettotalProtein() == Pro) {
+                    if (gettotalSugars() < Sug) {
+
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물,당류, 나트륨을 기준량에 비해 덜 섭취하고, 지방을 기준량보다 더 많이 섭취했으며, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 당류를 기준량에 비해 덜 섭취하고, 당류, 나트륨을 기준량보다 더 섭취하였으며, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 당류를 기준량에 비해 덜 섭취하고, 지방을 기준량보다 더 많이 섭취했으며, 단백질과 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() > Sug) {
+
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 나트륨을 기준량에 비해 덜 섭취하고, 지방과 당류를 기준량보다 더 섭취하였으며, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 당류, 나트륨, 지방을 기준량보다 더 섭취하였으며, 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 당류, 지방을 기준량 보다 더 섭취하였으며, 단백질과 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() == Sug) {
+
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 나트륨을 기준량에 비해 덜 섭취하고, 지방을 기준량보다 더 섭취했으며 , 단백질, 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 지방, 나트륨을 기준량보다 더 섭취했으며, 단백질, 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 단백질을 기준량보다 더 섭취했으며, 단백질, 당류와 나트륨을 알맞게 섭취하셨네요!";
+                        }
+                    }
+                }
+            } else if (gettotalFat() == Fa) {
+                if (gettotalProtein() < Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 단백질, 당류, 나트륨을 기준량에 비해 덜 섭취하고, 지방을 알맞게 섭취하셨네요 !";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 단백질, 당류를 기준량에 비해 덜 섭취하고, 나트륨을 기준량보다 더 섭취하였으며, 지방을 알맞게 섭취하셨네요 !";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 단백질, 당류를 기준량에 비해 덜 섭취하셨고, 지방과 나트륨은 알맞게 드셨네요!";
+                        }
+                    } else if (gettotalSugars() > Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents =  "탄수화물, 단백질, 나트륨을 기준량에 비해 덜 섭취하고, 당류는 기준량보다 더 섭취하였으며 지방을 알맞게 섭취하셨네요 !";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents =  "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 당류, 나트륨은 기준량보다 더 섭취하였으며 지방을 알맞게 섭취하셨네요 !";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents =  "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 당류는 기준량보다 더 섭취하였으며, 지방과 나트륨은 알맞게 드셨네요!";
+                        }
+
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 단백질, 나트륨은 기준량에 비해 덜 섭취하고, 지방과 당류는 알맞게 드셨습니다.";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 나트륨은 기준량보다 더 많이 섭취하였으며, 지방과 당류는 알맞게 드셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 단백질을 기준량에 비해 덜 섭취하고, 지방, 당류와 나트륨을 알맞게 드셨네요!";
+                        }
+                    }
+                } else if (gettotalProtein() > Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents =  "탄수화물, 당류, 나트륨을 기준량에 비해 덜 섭취하고, 단백질을 더 섭취하였으며, 지방을 알맞게 섭취하셨네요 !";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물과 당류를 기준량에 비해 덜 섭취하고, 단백질, 나트륨을 더 섭취하였으며, 지방을 알맞게 섭취하셨네요 !";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물과 당류를 기준량에 비해 덜 섭취하고, 단백질을 기준량 보다 더 섭취하였으며, 지방과 나트륨은 알맞게 드셨네요!";
+                        }
+                    } else if (gettotalSugars() > Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물과 나트륨을 기준량에 비해 덜 섭취하고, 단백질과 당류를 기준량보다 더 섭취하셨으며, 지방은 알맞게 드셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 단백질, 당류를 기준량보다 더 섭취하였으며, 지방은 알맞게 드셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 단백질, 당류를 기준량보다 더 섭취하였으며 지방과 나트륨은 알맞게 드셨네요!";
+                        }
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 단백질을 기준량보다 덜 섭취하였고, 지방과 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물이 기준량에 비해 덜 섭취하고, 단백질, 나트륨을 기준량보다 더 섭취했으며, 지방과 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물이 기준량에 비해 덜 섭취하고, 단백질을 기준량보다 더 섭취했으며 지방, 당류, 나트륨을 알맞게 섭취하셨네요!";
+                        }
+                    }
+                } else if (gettotalProtein() == Pro) {
+                    if (gettotalSugars() < Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물,당류, 나트륨을 기준량에 비해 덜 섭취하고, 지방과 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물, 당류를 기준량에 비해 덜 섭취하고, 나트륨을 기준량보다 더 섭취하였으며, 지방과 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물, 당류를 기준량에 비해 덜 섭취하고, 지방, 단백질, 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() > Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 나트륨을 기준량에 비해 덜 섭취하고, 당류를 기준량보다 더 섭취하였으며, 지방과 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 당류, 나트륨을 기준량보다 더 섭취하였으며, 지방과 단백질은 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 당류를 기준량 보다 더 섭취하였으며, 지방, 단백질과 나트륨은 알맞게 섭취하셨네요!";
+                        }
+                    } else if (gettotalSugars() == Sug) {
+                        if (gettotalSodium() < Sod ) {
+                            this.contents = "탄수화물, 나트륨을 기준량에 비해 덜 섭취하고, 지방, 단백질, 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() > Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 나트륨을 기준량보다 더 섭취했으며, 지방, 단백질, 당류는 알맞게 섭취하셨네요!";
+                        } else if (gettotalSodium() == Sod ) {
+                            this.contents = "탄수화물을 기준량에 비해 덜 섭취하고, 단백질, 당류, 단백질, 지방을 알맞게 섭취하셨네요!";
+                        }
+                    }
+                }
+            }
+        } // 다른 예외는 만들다가 덜만들어서 파일 다른 파일에 옮겨뒀어요 ㅠㅠ 필요하시면 빨리 작업해서 올릴게요
+    }
+    public String getContents() {
+        return contents;
+    }
+
+
+    public int gettotalCarbohydrate() {
+
+        return totalCarbohydrate;
+    }
+
+    public int gettotalFat() {
+
+        return totalFat;
+    }
+
+    public int gettotalProtein() {
+
+        return totalProtein;
+    }
+
+    public int gettotalSodium() {
+        return totalSodium;
+    }
+
+    public int gettotalSugars() {
+        return totalSugars;
+    }
+}
+
+
+// coment : 설탕이 너무 많습니다.
+// : 나트륨이 너무 많습니다.
+// : 단백질이 너무 많습니다.
+// : 탄수화물이 너무 많습니다.
+// : 지방이 너무 많습니다.
+
+// 음식 칼로리 표 : https://m.blog.naver.com/min02299/221177656019
+// 영양성분표 :https://health.amc.seoul.kr/health/maintain/guide.do
+
+
+
